@@ -26,3 +26,9 @@
 .detailHeader {
   text-align: center;
 }
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
