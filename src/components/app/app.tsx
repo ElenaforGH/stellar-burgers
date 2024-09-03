@@ -21,7 +21,6 @@ import { Modal } from '../modal';
 import { OrderInfo } from '../order-info';
 import { IngredientDetails } from '../ingredient-details';
 import { getIngredients } from '../../services/ingredients/actions';
-import { getFeeds } from '../../services/feeds/actions';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,7 +32,6 @@ const App = () => {
   useEffect(() => {
     dispatch(checkUserAuth());
     dispatch(getIngredients());
-    dispatch(getFeeds());
   }, []);
 
   return (

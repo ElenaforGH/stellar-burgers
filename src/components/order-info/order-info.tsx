@@ -2,11 +2,10 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector } from 'react-redux';
 import { getIngredientsData } from '../../services/ingredients/ingredientsSlice';
 import { getOrderData } from '../../services/order/orderByNumberSlice';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { getOrderByNumber } from '../../services/order/actions';
 
 export const OrderInfo: FC = () => {

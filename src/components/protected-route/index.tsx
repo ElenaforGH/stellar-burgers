@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   getIsAuthChecked,
   getUserSelector
 } from '../../services/auth/authSlice';
 import { Preloader } from '../ui/preloader';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from '../../services/store';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;

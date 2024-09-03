@@ -18,7 +18,10 @@ export const newOrderSlice = createSlice({
   name: 'newOrder',
   initialState,
   reducers: {
-    deleteOrderData: (state) => initialState
+    deleteOrderData: (state) => {
+      state.newOrderData = null;
+      state.newOrderRequest = false;
+    }
   },
   selectors: {
     getOrder: (state) => state.newOrderData,
