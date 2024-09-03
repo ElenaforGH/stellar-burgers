@@ -21,6 +21,7 @@ export const newOrderSlice = createSlice({
     deleteOrderData: (state) => {
       state.newOrderData = null;
       state.newOrderRequest = false;
+      state.error = null;
     }
   },
   selectors: {
