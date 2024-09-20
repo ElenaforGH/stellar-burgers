@@ -5,6 +5,6 @@ export const getOrderByNumber = createAsyncThunk(
   'orders/orderByNumber',
   async (number: number) => {
     const data = await getOrderByNumberApi(number);
-    return data;
+    return data.orders[0];
   }
 );

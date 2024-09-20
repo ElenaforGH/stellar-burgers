@@ -7,13 +7,15 @@ interface TFeedsState {
   feedsData: TOrder[];
   sumCompletedToday: number;
   sumCompletedAll: number;
+  isLoading: boolean;
 }
 
 export const initialState: TFeedsState = {
   feedsData: [],
   error: null,
   sumCompletedToday: 0,
-  sumCompletedAll: 0
+  sumCompletedAll: 0,
+  isLoading: false
 };
 
 export const feedsSlice = createSlice({
@@ -27,15 +29,18 @@ export const feedsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getFeeds.pending, (state) => {
+      state.isLoading = true;
       state.error = null;
     });
     builder.addCase(getFeeds.rejected, (state, action) => {
       state.error = action.error.message;
+      state.isLoading = false;
     });
     builder.addCase(getFeeds.fulfilled, (state, action) => {
       state.feedsData = action.payload.orders;
       state.sumCompletedToday = action.payload.totalToday;
       state.sumCompletedAll = action.payload.total;
+      state.isLoading = false;
     });
   }
 });

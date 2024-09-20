@@ -24,12 +24,15 @@ export const orderByNumberSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getOrderByNumber.pending, (state) => {
       state.error = null;
+      state.isLoading = true;
     });
     builder.addCase(getOrderByNumber.rejected, (state, action) => {
       state.error = action.error.message;
+      state.isLoading = false;
     });
     builder.addCase(getOrderByNumber.fulfilled, (state, action) => {
-      state.orderData = action.payload.orders[0];
+      state.orderData = action.payload;
+      state.isLoading = false;
     });
   }
 });
