@@ -1,72 +1,73 @@
-import * as mockUserData from '../../fixtures/userData.json'
+import * as mockUserData from '../../fixtures/userData.json';
+import * as mockOrderData from '../../fixtures/newOrder.json';
 
-describe('Проверка конструктора бургера', () => {
+describe('Проверка страницы конструктора бургера', () => {
+
+  const ingredients = '[data-cy=ingredients]';
+  const modal = '[data-cy=modal]';
+  const topBun = '[data-cy=topBurgerBun]';
+  const burgerIngredients = '[data-cy=burgerConstructorIngredients]';
+  const bottomBun = '[data-cy=bottomBurgerBun]'
+
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
-    cy.visit('http://localhost:4000');
-  });
-
-it('Добавление ингредиентов в бургер', () => {
-  cy.get('[data-cy=ingredients]')
-  .get('ul>li').eq(0).find('button')
-  .click();
-    cy.get('[data-cy=ingredients]')
-    .get('ul>li').eq(2).find('button')
-    .click();
-  cy.get('[data-cy=topBurgerBun]')
-    .find('.constructor-element__text')
-    .should('have.text', 'Краторная булка N-200i (верх)');
-  cy.get('[data-cy=burgerConstructorIngredients]')
-    .find('.constructor-element__text')
-    .should('have.text', 'Биокотлета из марсианской Магнолии');
-  cy.get('[data-cy=bottomBurgerBun]')
-    .find('.constructor-element__text')
-    .should('have.text', 'Краторная булка N-200i (низ)');
-});
-});
-
-describe('Проверка работы модальных окон', () => {
-  beforeEach(() => {
-    cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
-    cy.visit('http://localhost:4000');
-  });
-  it('Открытие и закрытие модального окна', () => {
-    cy.get('[data-cy=ingredients]')
-    .get('ul>li').eq(0).click();
-    cy.get('[data-cy=modal]').should('exist');
-    cy.get('[data-cy=modal]').contains('Краторная булка N-200i');
-    cy.get('[data-cy=modal]').find('button').click();
-    cy.get('[data-cy=modal]').should('not.exist') 
-  })
-});
-
-describe('Cоздание заказа', () => {
-  beforeEach(() => {
     cy.intercept('GET', 'api/auth/user', { fixture: 'userData.json' });
-    cy.intercept('POST', 'api/orders', { fixture: 'newOrder.json' });
     cy.setCookie('accessToken', mockUserData.accessToken);
     cy.window().then(win => win.localStorage.setItem('refreshToken', mockUserData.refreshToken))
-    cy.visit('http://localhost:4000');
-  });
-  it('Сборка бургера', () => {
-    cy.get('[data-cy=ingredients]')
+    cy.visit('');    
+   });
+
+it('Добавление ингредиентов в бургер', () => {
+  cy.get(ingredients).as('ingredients')
+  cy.get('@ingredients').get('ul>li').eq(0).find('button')
+  .click();
+  cy.get('@ingredients').get('ul>li').eq(2).find('button')
+  .click();
+  cy.get(topBun).find('.constructor-element__text')
+    .should('have.text', 'Краторная булка N-200i (верх)');
+  cy.get(burgerIngredients).find('.constructor-element__text')
+    .should('have.text', 'Биокотлета из марсианской Магнолии');
+  cy.get(bottomBun).find('.constructor-element__text')
+    .should('have.text', 'Краторная булка N-200i (низ)');
+});
+
+  it('Проверка работы модального окна', () => {
+    cy.get(ingredients).as('ingredients')
+    cy.get('@ingredients').get('ul>li').eq(0).click(); 
+    cy.get(modal).as('modal')  
+    cy.get('@modal').should('exist');
+    cy.get('@modal').contains('Краторная булка N-200i');
+    cy.get('@modal').find('button').click();
+    cy.get('@modal').should('not.exist') 
+  })
+
+  it('Создание заказа', () => {
+    cy.get(ingredients).as('ingredients')
+    cy.get('@ingredients')
     .get('ul>li').eq(0).find('button')
     .click();
-    cy.get('[data-cy=ingredients]')
+    cy.get('@ingredients')
     .get('ul>li').eq(2).find('button')
     .click();
-    cy.get('[data-cy=constructor]').find('button').click();
-    cy.get('[data-cy=modal]').should('exist');
-    cy.get('[data-cy=modal]').contains('53388');
-    cy.get('[data-cy=modal]').find('button').click();
-    cy.get('[data-cy=modal]').should('not.exist');
-    cy.get('[data-cy=burgerConstructor]').contains('Выберите булки');
-    cy.get('[data-cy=burgerConstructor]').contains('Выберите начинку');
+    cy.get('[data-cy=constructor]').as('constructor');
+    cy.get('[data-cy=burgerConstructor]').as('burgerConstructor')
+    cy.get('@constructor').find('button').click().intercept('POST', 'api/orders', { fixture: 'newOrder.json' });    
+    cy.get(topBun).contains(mockOrderData.order.ingredients[0].name);
+    cy.get(bottomBun).contains(mockOrderData.order.ingredients[0].name);
+    cy.get(burgerIngredients).contains(mockOrderData.order.ingredients[1].name);
+    cy.get(modal).as('modal');
+    cy.get('@modal').should('exist');
+    cy.get('@modal').contains(mockOrderData.order.number);    
+    cy.get('@modal').find('button').click();
+    cy.get('@modal').should('not.exist');
+    cy.get('@burgerConstructor').contains('Выберите булки');
+    cy.get('@burgerConstructor').contains('Выберите начинку');
 });
 
 afterEach(() => {
   cy.clearCookies();
   cy.window().then(win => win.localStorage.clear())
 });
-})
+});
+
 
