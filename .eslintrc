@@ -10,12 +10,7 @@
     }
   },
   "rules": {
-    "prettier/prettier": [
-      "warn",
-      {
-        "usePrettierrc": true
-      }
-    ],
+    "prettier/prettier": [ "error", { "endOfLine": "auto" }, { "usePrettierrc": true } ],
     "react/react-in-jsx-scope": "off",
     "comma-dangle": "off",
     "use-isnan": ["error", { "enforceForSwitchCase": true }],
